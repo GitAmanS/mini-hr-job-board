@@ -9,10 +9,11 @@ exports.createApplication = async (req, res) => {
             return res.status(400).json({ message: 'Resume is required' });
         }
 
+        const resumePath = req.file ? `/uploads/resumes/${req.file.filename}` : null;
         const application = new Application({
             candidateId: req.user._id,
             jobId,
-            resumeUrl,
+            resumeUrl:resumePath,
         });
 
         await application.save();
