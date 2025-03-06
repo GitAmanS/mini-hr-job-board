@@ -36,9 +36,10 @@ exports.updateJob = async (req, res) => {
         const job = await Job.findById(req.params.id);
         if (!job) return res.status(404).json({ message: 'Job not found' });
 
-        if (job.recruiterId.toString() !== req.user.userId) {
+        if (job.recruiter.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
+
 
         Object.assign(job, req.body);
         await job.save();
@@ -53,13 +54,14 @@ exports.deleteJob = async (req, res) => {
         const job = await Job.findById(req.params.id);
         if (!job) return res.status(404).json({ message: 'Job not found' });
 
-        if (job.recruiterId.toString() !== req.user.userId) {
+        if (job.recruiter.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
 
         await job.deleteOne();
         res.json({ message: 'Job deleted successfully' });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Server error' });
     }
 };

@@ -3,7 +3,6 @@ const User = require('../models/User');
 
 const authMiddleware = async (req, res, next) => {
   let token;
-
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
       token = req.headers.authorization.split(' ')[1];
@@ -13,6 +12,7 @@ const authMiddleware = async (req, res, next) => {
       
       next(); 
     } catch (error) {
+      console.error(error);
       res.status(401).json({ message: 'Not authorized, token failed' });
     }
   } else {

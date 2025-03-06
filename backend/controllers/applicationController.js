@@ -1,5 +1,5 @@
 const Application = require('../models/Application');
-
+const Job = require('../models/Job');
 exports.createApplication = async (req, res) => {
     try {
         const { jobId } = req.body;
@@ -8,12 +8,14 @@ exports.createApplication = async (req, res) => {
         if (!resumeUrl) {
             return res.status(400).json({ message: 'Resume is required' });
         }
-
+        const job = await Job.findById(jobId);
+        const recruiter = job.recruiter;
         const resumePath = req.file ? `/uploads/resumes/${req.file.filename}` : null;
         const application = new Application({
             candidateId: req.user._id,
             jobId,
             resumeUrl:resumePath,
+            recruiter
         });
 
         await application.save();
@@ -25,7 +27,7 @@ exports.createApplication = async (req, res) => {
 
 exports.getAllApplications = async (req, res) => {
     try {
-        const applications = await Application.find().populate('candidateId jobId', '-password');
+        const applications = await Application.find({recruiter: req.user._id}).populate('candidateId jobId', '-password');
         res.json(applications);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
@@ -47,10 +49,6 @@ exports.deleteApplication = async (req, res) => {
     try {
         const application = await Application.findById(req.params.id);
         if (!application) return res.status(404).json({ message: 'Application not found' });
-
-        if (application.candidateId.toString() !== req.user.userId) {
-            return res.status(403).json({ message: 'Unauthorized' });
-        }
 
         await application.deleteOne();
         res.json({ message: 'Application deleted successfully' });
