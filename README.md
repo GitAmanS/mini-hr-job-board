@@ -67,12 +67,5 @@
 - Use Postman to test API endpoints.
 - Ensure MongoDB is running locally or provide a remote connection.
 
-## Next Steps
-Once you complete this assignment, we will review your submission and invite you to a technical interview to discuss your solution, followed by an HR round. We look forward to seeing your approach!
 
----
-### Notes
-- Next.js is used for the frontend; instructions are minimal as assumed knowledge.
-- Ensure all required dependencies are installed before running the project.
-- If using a real resume parsing API, configure the required API keys in the backend.
 
